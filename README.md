@@ -73,12 +73,18 @@ store_locations = [
 
 ## Generate random dates within June, July, and August 2024 - POS_Sales_Data_2024 - Generation
 def generate_random_date(start_date, end_date):
+
     delta = end_date - start_date
+    
     random_days = random.randint(0, delta.days)
+    
     return start_date + timedelta(days=random_days)
+    
 
 start_date = datetime(2024, 6, 1)
+
 end_date = datetime(2024, 8, 31)
+
 
 ## Generate data
 data = {
@@ -101,39 +107,51 @@ data = {
 ## Create DataFrame
 df = pd.DataFrame(data)
 
+
 ## Combine Date and Time into Timestamp
 df['Timestamp'] = pd.to_datetime(df['Transaction Date'].astype(str) + ' ' + df['Transaction Time'])
+
 
 ## Drop the original Date and Time columns
 df = df.drop(columns=['Transaction Date', 'Transaction Time'])
 
+
 ## Calculate Total Amount
 df['Total Amount'] = df['Quantity'] * df['Unit Price']
+
 
 ## Calculate Discount Applied
 df['Discount Applied'] = [round(np.random.uniform(0.0, 50.0), 2) for _ in range(num_rows)]
 
+
 ## Calculate Tax Amount
 df['Tax Amount'] = df['Total Amount'] * 0.07
+
 
 ## Calculate Total Amount After Tax
 df['Total Amount After Tax'] = df['Total Amount'] + df['Tax Amount'] - df['Discount Applied']
 
+
 ## Save to CSV (Put your local storage path)
 df.to_csv('pos_transactional_data_medicines_with_timestamp_june_august_2024.csv', index=False)
 
+
 print("Data generation complete and saved to 'pos_transactional_data_medicines_with_timestamp_june_august_2024.csv'.")
+
 
 
 ## Product_Categorywise_Vendor_Data_2024 & Inventory_Data - Generation
 
 ## Define constants
+
 num_vendors = 10
 num_stores = 10
 num_products = 15
 num_inventory_entries = num_stores * num_products
 
+
 ## Define store locations and product categories
+
 store_locations = [
     'New York City',
     'Los Angeles',
@@ -181,6 +199,7 @@ medicines = {
 }
 
 ## Generate Vendor Data
+
 vendors = {
     'Vendor ID': [f'V{str(i).zfill(3)}' for i in range(1, num_vendors + 1)],
     'Vendor Name': [fake.company() for _ in range(num_vendors)],
@@ -188,9 +207,12 @@ vendors = {
     'Supply Rate': [np.random.uniform(0.8, 1.2) for _ in range(num_vendors)]  # Supply rate as a multiplier
 }
 
+
 df_vendors = pd.DataFrame(vendors)
 
+
 ## Generate Inventory Data
+
 inventory = {
     'Store ID': [f'S{str(i).zfill(3)}' for i in range(1, num_stores + 1) for _ in range(num_products)],
     'Store Location': [np.random.choice(store_locations) for _ in range(num_inventory_entries)],
@@ -205,20 +227,31 @@ inventory = {
 }
 
 ## Assign product names and categories to match the product ID
+
 product_names = []
+
 product_categories_list = []
 
+
 for _ in range(num_inventory_entries):
+
     category = np.random.choice(product_categories)
+    
     product_names.append(np.random.choice(medicines[category]))
+    
     product_categories_list.append(category)
+    
 
 inventory['Product Name'] = product_names
+
 inventory['Product Category'] = product_categories_list
+
 
 df_inventory = pd.DataFrame(inventory)
 
+
 print("Supply chain data generation complete and saved to 'vendor_data.csv' and 'inventory_data.csv'.")
+
 
 
 
